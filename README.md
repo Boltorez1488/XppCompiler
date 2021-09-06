@@ -1,6 +1,12 @@
 # XppCompiler **\[OldCode\]**
 Xml Structures Editor (Console) - Creating descriptions of structures for use in C++ 
 
+Support:
+- Namespaces
+- Structs
+- Enums
+- Pointers to structs
+
 ## Help
 ```
 Use: <file|directory> <out directory> <params>
