@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace name="GM">
+    <namespace name="Item">
+        <enum name="DDD">
+            <val name="PPP" comment="253">1</val>
+        </enum>
+        <struct name="Test">
+            <var offset="0x192">int level</var>
+            <ptr path="GM.Item.DDD">*st</ptr>
+        </struct>
+        <struct name="Test2">
+            <var array="2">char test</var>
+            <var offset="4">int level</var>
+        </struct>
+    </namespace>
+    <namespace name="Item2">
+        <struct name="Test">
+            <var offset="0x192">int level</var>
+            <ptr path="GM.Item.Test">*st</ptr>
+        </struct>
+        <struct name="Test2">
+            <var array="2">char test</var>
+            <var offset="4">int level</var>
+        </struct>
+    </namespace>
+</namespace>

@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="NamespaceName">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-z]{1}[A-z,0-9]*(\.[A-z][A-z,0-9]*)*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Value">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="[A-z]{1,}([0-9,A-z].*){0,}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Var">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="([A-z]{1,}.*[:]{0,}[\*, ]{1,}[A-z]{1,}([0-9,A-z].*){0,})||([A-z]{1,}[ ]{0,}\([ ,*]{1,}[A-z]{1,}[ ]{0,}\)[ ]{0,}\([A-z]{1,}[ ,\,]{0,}.*\))"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Path">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="([A-z]{1}[A-z,0-9]*(\.[A-z][A-z,0-9]*)*)||(../){1,}[A-z]{1}[A-z,0-9]*(/[A-z][A-z,0-9]*)*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PtrValue">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="[*, ]{0,}[A-z]{1}[A-z,0-9]{0,}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="enumVar">
+        <xs:sequence>
+            <xs:element name="val" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="Value" use="required" />
+                            <xs:attribute name="comment" type="xs:string" />
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="Value" use="required" />
+        <xs:attribute name="var" type="xs:string" />
+        <xs:attribute name="offset" type="xs:string" />
+        <xs:attribute name="size" type="xs:string" />
+        <xs:attribute name="array" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="structVar">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element ref="namespace" maxOccurs="0"/>
+            <xs:element name="var" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="Var">
+                            <xs:attribute name="offset" type="xs:string" />
+                            <xs:attribute name="size" type="xs:string" />
+                            <xs:attribute name="array" type="xs:string" />
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="struct" type="structVar" minOccurs="0"/>
+            <xs:element name="ptr" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="PtrValue">
+                            <xs:attribute name="path" type="Path" />
+                            <xs:attribute name="offset" type="xs:string" />
+                            <xs:attribute name="size" type="xs:string" />
+                            <xs:attribute name="array" type="xs:string" />
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="name" type="Value" use="required" />
+        <xs:attribute name="var" type="xs:string" />
+        <xs:attribute name="offset" type="xs:string" />
+        <xs:attribute name="size" type="xs:string" />
+        <xs:attribute name="array" type="xs:string" />
+    </xs:complexType>
+    <xs:element name="struct">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="namespace" maxOccurs="0"/>
+                <xs:element name="var" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="Var">
+                                <xs:attribute name="offset" type="xs:string" />
+                                <xs:attribute name="size" type="xs:string" />
+                                <xs:attribute name="array" type="xs:string" />
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ptr" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="PtrValue">
+                                <xs:attribute name="path" type="Path" />
+                                <xs:attribute name="offset" type="xs:string" />
+                                <xs:attribute name="size" type="xs:string" />
+                                <xs:attribute name="array" type="xs:string" />
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="struct" type="structVar" minOccurs="0"/>
+            </xs:choice>
+            <xs:attribute name="name" type="Value" use="required" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="namespace">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="namespace" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="enum" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="val" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="name" type="Value" use="required" />
+                                            <xs:attribute name="comment" type="xs:string" />
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="Value" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="struct" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element ref="namespace" maxOccurs="0"/>
+                            <xs:element name="var" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="Var">
+                                            <xs:attribute name="offset" type="xs:string" />
+                                            <xs:attribute name="size" type="xs:string" />
+                                            <xs:attribute name="array" type="xs:string" />
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ptr" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="PtrValue">
+                                            <xs:attribute name="path" type="Path" />
+                                            <xs:attribute name="offset" type="xs:string" />
+                                            <xs:attribute name="size" type="xs:string" />
+                                            <xs:attribute name="array" type="xs:string" />
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="enum" type="enumVar" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="struct" type="structVar" minOccurs="0"/>
+                        </xs:choice>
+                        <xs:attribute name="name" type="Value" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:attribute name="name" type="NamespaceName" />
+        </xs:complexType>
+        <xs:unique name="NameUnique">
+            <xs:selector xpath="struct|namespace|enum" />
+            <xs:field xpath="@name"/>
+        </xs:unique>
+    </xs:element>
+</xs:schema>
