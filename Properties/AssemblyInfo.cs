@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("XppCompiler")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("RevTechnologies")]
 [assembly: AssemblyProduct("XppCompiler")]
 [assembly: AssemblyCopyright("Copyright © Boltorez1488 2018")]
 [assembly: AssemblyTrademark("")]
